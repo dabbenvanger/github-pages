@@ -304,8 +304,13 @@
                             .sort((a, b) => b.value - a.value);
                         
                         items.forEach(item => {
-                            // Alleen speciale behandeling voor NAC Breda (gele kleur)
-                            const isNACBredaTeam = item.color === "#F7FF00";
+                            // Verschillende achtergronden voor de gele teams
+                            const isNACBredaTeam = item.color === "#F7FF00";  // Zwarte achtergrond
+                            const isWalburgTeam = item.color === "#FFE249";    // Witte achtergrond
+                            
+                            let bgColor = "transparent";
+                            if (isNACBredaTeam) bgColor = "black";
+                            if (isWalburgTeam) bgColor = "white";
                             
                             innerHtml += `<div class="tooltip-item">
                                 <div class="tooltip-team">
@@ -314,7 +319,8 @@
                                 </div>
                                 <div class="tooltip-score" style="
                                     color: ${item.color}; 
-                                    background-color: ${isNACBredaTeam ? 'black' : 'transparent'};
+                                    background-color: ${bgColor};
+                                    ${isWalburgTeam ? 'border: 1px solid #e2e8f0;' : ''}
                                 ">${item.value} ptn</div>
                             </div>`;
                         });
@@ -349,9 +355,7 @@
                             position: 'bottom',
                             labels: {
                                 usePointStyle: true,
-                                pointStyle: 'rectRounded',
-                                boxWidth: 40,
-                                boxHeight: 6,
+                                boxWidth: 8,
                                 padding: 15,
                                 font: {
                                     size: 12
