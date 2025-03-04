@@ -158,9 +158,17 @@
                 width: 100%;
                 min-width: 0;
             }
-            /* Maken dat de grafiek hoger is op mobiele apparaten */
+            /* Grafiek veel hoger maken op mobiele apparaten */
             .chart-container {
-                height: 500px;
+                height: 650px !important; /* Forceer een veel grotere hoogte */
+            }
+            /* Tussenstand minder laten inspringen */
+            .team-name {
+                max-width: 85%;
+            }
+            .team-item {
+                justify-content: space-between;
+                padding-right: 5px;
             }
         }
         @media (max-width: 600px) {
@@ -168,15 +176,18 @@
             .dashboard {
                 padding: 10px;
             }
-            .team-name {
-                max-width: 120px;
-            }
             .team-item {
-                padding: 8px 0;
+                padding: 8px 5px 8px 0;
             }
             .team-score {
                 min-width: 30px;
                 text-align: right;
+            }
+            .rank {
+                margin-right: 8px;
+            }
+            .team-color {
+                margin-right: 6px;
             }
         }
     </style>
@@ -189,7 +200,7 @@
         </div>
         
         <div class="content">
-            <div class="chart-container" style="height: 400px;">
+            <div class="chart-container" style="height: 500px;">
                 <canvas id="teamScoreChart"></canvas>
             </div>
             
