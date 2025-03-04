@@ -1,351 +1,424 @@
-<!-- Load React, ReactDOM, and Recharts from CDN -->
-<script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
-<script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
-<script src="https://unpkg.com/recharts@2.1.14/umd/Recharts.min.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
-<!-- Container for the chart -->
-<div id="team-score-chart" style="width: 100%; height: 600px;"></div>
-
-<!-- Chart code (as a Babel script) -->
-<script type="text/babel">
-  // Access Recharts components
-  const {
-    LineChart, Line, XAxis, YAxis, CartesianGrid, 
-    Tooltip, Legend, ResponsiveContainer, Label
-  } = Recharts;
-
-  // Create the React component
-  const ScoreChart = () => {
-    // Data representing the score progression for each team across 8 rounds
-    const data = [
-      {
-        round: 1,
-        "You Will Never Find Brian Here": 12,
-        "NAC Breda 1912": 9,
-        "Keymasters": 9,
-        "Toasty Town": 12,
-        "Het Flevoslot": 9,
-        "Maid'n Atletic": 8,
-        "Walburg": 13
-      },
-      {
-        round: 2,
-        "You Will Never Find Brian Here": 32,
-        "NAC Breda 1912": 29,
-        "Keymasters": 30,
-        "Toasty Town": 29,
-        "Het Flevoslot": 25,
-        "Maid'n Atletic": 29,
-        "Walburg": 27
-      },
-      {
-        round: 3,
-        "You Will Never Find Brian Here": 41,
-        "NAC Breda 1912": 46,
-        "Keymasters": 39,
-        "Toasty Town": 38,
-        "Het Flevoslot": 39,
-        "Maid'n Atletic": 38,
-        "Walburg": 27
-      },
-      {
-        round: 4,
-        "You Will Never Find Brian Here": 65,
-        "NAC Breda 1912": 65,
-        "Keymasters": 61,
-        "Toasty Town": 53,
-        "Het Flevoslot": 54,
-        "Maid'n Atletic": 53,
-        "Walburg": 27
-      },
-      {
-        round: 5,
-        "You Will Never Find Brian Here": 84,
-        "NAC Breda 1912": 79,
-        "Keymasters": 73,
-        "Toasty Town": 65,
-        "Het Flevoslot": 67,
-        "Maid'n Atletic": 70,
-        "Walburg": 27
-      },
-      {
-        round: 6,
-        "You Will Never Find Brian Here": 100,
-        "NAC Breda 1912": 93,
-        "Keymasters": 90,
-        "Toasty Town": 83,
-        "Het Flevoslot": 81,
-        "Maid'n Atletic": 84,
-        "Walburg": 27
-      },
-      {
-        round: 7,
-        "You Will Never Find Brian Here": 103,
-        "NAC Breda 1912": 101,
-        "Keymasters": 100,
-        "Toasty Town": 94,
-        "Het Flevoslot": 89,
-        "Maid'n Atletic": 92,
-        "Walburg": 27
-      },
-      {
-        round: 8,
-        "You Will Never Find Brian Here": 117,
-        "NAC Breda 1912": 115,
-        "Keymasters": 108,
-        "Toasty Town": 105,
-        "Het Flevoslot": 103,
-        "Maid'n Atletic": 101,
-        "Walburg": 27
-      }
-    ];
-
-    // Define colors for each team based on the Excel file
-    const teamColors = {
-      "You Will Never Find Brian Here": "#000000", // Black
-      "NAC Breda 1912": "#F7FF00", // Yellow
-      "Keymasters": "#ED0101", // Red
-      "Toasty Town": "#12A0D7", // Blue
-      "Het Flevoslot": "#EEAA00", // Orange
-      "Maid'n Atletic": "#0035C2", // Dark Blue
-      "Walburg": "#FFE249" // Light Yellow
-    };
-
-    // Get all team names
-    const teamNames = Object.keys(data[0]).filter(key => key !== 'round');
-
-    // Calculate team rankings for the leaderboard
-    const finalRankings = teamNames
-      .map(team => ({ 
-        name: team, 
-        score: data[data.length-1][team],
-        color: teamColors[team]
-      }))
-      .sort((a, b) => b.score - a.score);
-
-    // Custom tooltip component with styling
-    const CustomTooltip = ({ active, payload, label }) => {
-      if (active && payload && payload.length) {
-        return (
-          <div style={{
-            backgroundColor: "white",
-            padding: "10px",
-            border: "1px solid #ccc",
-            borderRadius: "5px"
-          }}>
-            <div style={{
-              fontWeight: "bold",
-              borderBottom: "1px solid #eee",
-              marginBottom: "5px",
-              paddingBottom: "5px"
-            }}>Round {label}</div>
-            {payload.map((entry, index) => (
-              <div key={`item-${index}`} style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                marginBottom: "3px"
-              }}>
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <div style={{
-                    width: "10px",
-                    height: "10px",
-                    backgroundColor: entry.color,
-                    borderRadius: "50%",
-                    marginRight: "5px"
-                  }} />
-                  <span>{entry.name}: </span>
-                </div>
-                <span style={{ 
-                  fontWeight: "bold",
-                  color: entry.color,
-                  marginLeft: "10px"
-                }}>
-                  {entry.value} pts
-                </span>
-              </div>
-            ))}
-          </div>
-        );
-      }
-      return null;
-    };
-
-    return (
-      <div style={{
-        width: "100%",
-        height: "100%",
-        backgroundColor: "#f9fafb",
-        padding: "20px",
-        borderRadius: "10px",
-        boxShadow: "0 4px 6px rgba(0,0,0,0.1)"
-      }}>
-        <div style={{
-          marginBottom: "20px",
-          textAlign: "center"
-        }}>
-          <h2 style={{
-            fontSize: "1.5rem",
-            fontWeight: "bold",
-            margin: "0 0 5px 0"
-          }}>Team Score Progression</h2>
-          <p style={{
-            color: "#6b7280",
-            margin: "0"
-          }}>Cumulative points across 8 rounds</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Score Progression Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9fafb;
+        }
+        .dashboard {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9fafb;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .header h1 {
+            font-size: 28px;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+        .header p {
+            color: #6b7280;
+            margin: 0;
+            font-size: 16px;
+        }
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .chart-container {
+            flex: 1;
+            min-width: 650px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        .leaderboard {
+            width: 300px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        .leaderboard h2 {
+            font-size: 20px;
+            color: #1f2937;
+            margin-top: 0;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .team-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        .rank {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background-color: #f3f4f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            margin-right: 12px;
+            color: #4b5563;
+        }
+        .team-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 12px;
+        }
+        .team-name {
+            flex: 1;
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #374151;
+        }
+        .team-score {
+            font-weight: bold;
+            font-size: 16px;
+            color: #111827;
+        }
+        .top-teams .rank {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        .top-teams:first-child .rank {
+            background-color: #fef3c7;
+            color: #92400e;
+            border: 2px solid #f59e0b;
+        }
+        .custom-tooltip {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 10px 14px;
+            border: none;
+        }
+        .tooltip-title {
+            font-weight: bold;
+            padding-bottom: 8px;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 14px;
+            color: #374151;
+        }
+        .tooltip-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+        .tooltip-team {
+            display: flex;
+            align-items: center;
+            font-size: 13px;
+            color: #4b5563;
+        }
+        .tooltip-color {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .tooltip-score {
+            font-weight: bold;
+            margin-left: 12px;
+            font-size: 13px;
+        }
+        @media (max-width: 1000px) {
+            .content {
+                flex-direction: column;
+            }
+            .chart-container, .leaderboard {
+                width: 100%;
+                min-width: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="header">
+            <h1>Team Score Progression</h1>
+            <p>Cumulative points across 8 rounds</p>
         </div>
-
-        <div style={{
-          display: "flex",
-          flexDirection: window.innerWidth < 768 ? "column" : "row",
-          gap: "20px"
-        }}>
-          <div style={{
-            flex: "1",
-            backgroundColor: "white",
-            padding: "15px",
-            borderRadius: "8px",
-            boxShadow: "0 1px 3px rgba(0,0,0,0.1)"
-          }}>
-            <ResponsiveContainer width="100%" height={400}>
-              <LineChart
-                data={data}
-                margin={{
-                  top: 20,
-                  right: 30,
-                  left: 20,
-                  bottom: 20,
-                }}
-              >
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                <XAxis 
-                  dataKey="round" 
-                  tick={{ fill: '#6b7280' }}
-                >
-                  <Label 
-                    value="Round" 
-                    position="insideBottom" 
-                    offset={-15}
-                  />
-                </XAxis>
-                <YAxis 
-                  tick={{ fill: '#6b7280' }}
-                  domain={[0, 120]}
-                >
-                  <Label 
-                    value="Cumulative Points" 
-                    position="insideLeft" 
-                    angle={-90}
-                    style={{ textAnchor: 'middle' }}
-                    offset={-5}
-                  />
-                </YAxis>
-                <Tooltip content={<CustomTooltip />} />
-                <Legend />
-                
-                {teamNames.map((team) => (
-                  <Line
-                    key={team}
-                    type="monotone"
-                    dataKey={team}
-                    name={team}
-                    stroke={teamColors[team]}
-                    strokeWidth={team === "You Will Never Find Brian Here" ? 3 : 2}
-                    dot={{ 
-                      r: 4, 
-                      strokeWidth: 2,
-                      fill: '#fff',
-                      stroke: teamColors[team]
-                    }}
-                    activeDot={{ 
-                      r: 8, 
-                      strokeWidth: 0,
-                      fill: teamColors[team]
-                    }}
-                  />
-                ))}
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-          
-          <div style={{
-            width: window.innerWidth < 768 ? "100%" : "250px",
-            backgroundColor: "white",
-            padding: "15px",
-            borderRadius: "8px",
-            boxShadow: "0 1px 3px rgba(0,0,0,0.1)"
-          }}>
-            <h3 style={{
-              fontSize: "1.2rem",
-              fontWeight: "bold",
-              marginTop: "0",
-              marginBottom: "15px",
-              paddingBottom: "10px",
-              borderBottom: "1px solid #eee"
-            }}>Final Standings</h3>
-            
-            <div>
-              {finalRankings.map((team, index) => (
-                <div 
-                  key={team.name} 
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    padding: "8px 5px",
-                    borderBottom: index < finalRankings.length - 1 ? "1px solid #f0f0f0" : "none"
-                  }}
-                >
-                  <div style={{
-                    width: "24px",
-                    height: "24px",
-                    borderRadius: "50%",
-                    backgroundColor: "#f3f4f6",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontWeight: "bold",
-                    fontSize: "0.875rem",
-                    marginRight: "10px"
-                  }}>
-                    {index + 1}
-                  </div>
-                  
-                  <div style={{
-                    width: "12px",
-                    height: "12px",
-                    borderRadius: "50%",
-                    backgroundColor: team.color,
-                    marginRight: "10px"
-                  }} />
-                  
-                  <div style={{
-                    flex: "1",
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis"
-                  }}>
-                    {team.name}
-                  </div>
-                  
-                  <div style={{
-                    fontWeight: "bold",
-                    marginLeft: "10px"
-                  }}>
-                    {team.score}
-                  </div>
-                </div>
-              ))}
+        
+        <div class="content">
+            <div class="chart-container">
+                <canvas id="teamScoreChart"></canvas>
             </div>
-          </div>
+            
+            <div class="leaderboard">
+                <h2>Final Standings</h2>
+                <div id="rankings"></div>
+            </div>
         </div>
-      </div>
-    );
-  };
+    </div>
 
-  // Render the component to the DOM
-  ReactDOM.render(
-    <ScoreChart />,
-    document.getElementById('team-score-chart')
-  );
-</script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Team data with scores and colors
+            const teamData = [
+                {
+                    name: "You Will Never Find Brian Here",
+                    color: "#000000",
+                    scores: [12, 32, 41, 65, 84, 100, 103, 117]
+                },
+                {
+                    name: "NAC Breda 1912",
+                    color: "#F7FF00",
+                    scores: [9, 29, 46, 65, 79, 93, 101, 115]
+                },
+                {
+                    name: "Keymasters",
+                    color: "#ED0101",
+                    scores: [9, 30, 39, 61, 73, 90, 100, 108]
+                },
+                {
+                    name: "Toasty Town",
+                    color: "#12A0D7",
+                    scores: [12, 29, 38, 53, 65, 83, 94, 105]
+                },
+                {
+                    name: "Het Flevoslot",
+                    color: "#EEAA00",
+                    scores: [9, 25, 39, 54, 67, 81, 89, 103]
+                },
+                {
+                    name: "Maid'n Atletic",
+                    color: "#0035C2",
+                    scores: [8, 29, 38, 53, 70, 84, 92, 101]
+                },
+                {
+                    name: "Walburg",
+                    color: "#FFE249",
+                    scores: [13, 27, 27, 27, 27, 27, 27, 27]
+                }
+            ];
+            
+            // Sort teams by final score for rankings
+            const rankedTeams = [...teamData].sort((a, b) => 
+                b.scores[b.scores.length - 1] - a.scores[a.scores.length - 1]
+            );
+            
+            // Generate rankings HTML
+            const rankingsContainer = document.getElementById('rankings');
+            rankedTeams.forEach((team, index) => {
+                const teamItem = document.createElement('div');
+                teamItem.className = `team-item ${index < 3 ? 'top-teams' : ''}`;
+                
+                teamItem.innerHTML = `
+                    <div class="rank">${index + 1}</div>
+                    <div class="team-color" style="background-color: ${team.color}"></div>
+                    <div class="team-name" title="${team.name}">${team.name}</div>
+                    <div class="team-score">${team.scores[team.scores.length - 1]}</div>
+                `;
+                
+                rankingsContainer.appendChild(teamItem);
+            });
+            
+            // Prepare chart data
+            const rounds = [1, 2, 3, 4, 5, 6, 7, 8];
+            const datasets = teamData.map(team => ({
+                label: team.name,
+                data: team.scores,
+                borderColor: team.color,
+                backgroundColor: adjustOpacity(team.color, 0.1),
+                tension: 0.1,
+                borderWidth: team.name === "You Will Never Find Brian Here" ? 3 : 2,
+                pointBackgroundColor: '#FFFFFF',
+                pointBorderColor: team.color,
+                pointBorderWidth: 2,
+                pointRadius: 4,
+                pointHoverRadius: 7,
+                pointHoverBackgroundColor: team.color,
+                pointHoverBorderColor: '#FFFFFF'
+            }));
+            
+            // Custom tooltip
+            const customTooltip = {
+                enabled: false,
+                external: function(context) {
+                    // Tooltip Element
+                    let tooltipEl = document.getElementById('chartjs-tooltip');
+
+                    // Create element on first render
+                    if (!tooltipEl) {
+                        tooltipEl = document.createElement('div');
+                        tooltipEl.id = 'chartjs-tooltip';
+                        tooltipEl.classList.add('custom-tooltip');
+                        document.body.appendChild(tooltipEl);
+                    }
+
+                    // Hide if no tooltip
+                    const tooltipModel = context.tooltip;
+                    if (tooltipModel.opacity === 0) {
+                        tooltipEl.style.opacity = 0;
+                        return;
+                    }
+
+                    // Set content
+                    if (tooltipModel.body) {
+                        const titleLines = tooltipModel.title || [];
+                        const bodyLines = tooltipModel.body.map(b => b.lines);
+                        
+                        let innerHtml = '<div class="tooltip-title">';
+                        
+                        titleLines.forEach(title => {
+                            innerHtml += 'Round ' + title;
+                        });
+                        innerHtml += '</div>';
+
+                        // Sort items by value
+                        const items = tooltipModel.dataPoints
+                            .map(point => ({
+                                value: point.raw,
+                                label: point.dataset.label,
+                                color: point.dataset.borderColor
+                            }))
+                            .sort((a, b) => b.value - a.value);
+                        
+                        items.forEach(item => {
+                            innerHtml += `<div class="tooltip-item">
+                                <div class="tooltip-team">
+                                    <div class="tooltip-color" style="background-color: ${item.color}"></div>
+                                    ${item.label}
+                                </div>
+                                <div class="tooltip-score" style="color: ${item.color}">${item.value} pts</div>
+                            </div>`;
+                        });
+                        
+                        tooltipEl.innerHTML = innerHtml;
+                    }
+
+                    // Position tooltip and set opacity
+                    const position = context.chart.canvas.getBoundingClientRect();
+                    tooltipEl.style.opacity = 1;
+                    tooltipEl.style.position = 'absolute';
+                    tooltipEl.style.left = position.left + window.pageXOffset + tooltipModel.caretX + 'px';
+                    tooltipEl.style.top = position.top + window.pageYOffset + tooltipModel.caretY + 'px';
+                    tooltipEl.style.pointerEvents = 'none';
+                    tooltipEl.style.transform = 'translate(-50%, 0)';
+                }
+            };
+            
+            // Create the chart
+            const ctx = document.getElementById('teamScoreChart').getContext('2d');
+            const chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: rounds,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                usePointStyle: true,
+                                boxWidth: 8,
+                                padding: 15,
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        },
+                        tooltip: customTooltip
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Round',
+                                color: '#6b7280',
+                                font: {
+                                    size: 14
+                                },
+                                padding: { top: 10 }
+                            },
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: '#6b7280'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Cumulative Points',
+                                color: '#6b7280',
+                                font: {
+                                    size: 14
+                                },
+                                padding: { bottom: 10 }
+                            },
+                            min: 0,
+                            max: 120,
+                            grid: {
+                                color: '#e5e7eb'
+                            },
+                            ticks: {
+                                color: '#6b7280'
+                            }
+                        }
+                    },
+                    elements: {
+                        line: {
+                            borderJoinStyle: 'round'
+                        }
+                    },
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    }
+                }
+            });
+            
+            // Helper function to adjust color opacity
+            function adjustOpacity(color, opacity) {
+                // Handle hex colors
+                if (color.startsWith('#')) {
+                    const r = parseInt(color.slice(1, 3), 16);
+                    const g = parseInt(color.slice(3, 5), 16);
+                    const b = parseInt(color.slice(5, 7), 16);
+                    return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+                }
+                // Handle rgba colors
+                if (color.startsWith('rgba')) {
+                    return color.replace(/rgba\((.+), [\d\.]+\)/, `rgba($1, ${opacity})`);
+                }
+                // Handle rgb colors
+                if (color.startsWith('rgb')) {
+                    return color.replace('rgb', 'rgba').replace(')', `, ${opacity})`);
+                }
+                return color;
+            }
+        });
+    </script>
+</body>
+</html>
