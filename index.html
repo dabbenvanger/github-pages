@@ -46,6 +46,7 @@
             border-radius: 10px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             padding: 20px;
+            height: 500px; /* Standaard hoogte */
         }
         .leaderboard {
             width: 300px;
@@ -160,7 +161,8 @@
             }
             /* Grafiek veel hoger maken op mobiele apparaten */
             .chart-container {
-                height: 650px !important; /* Forceer een veel grotere hoogte */
+                height: 70vh !important; /* 70% van de viewport hoogte gebruiken */
+                min-height: 650px !important; /* Minimaal 650px hoog */
             }
             /* Tussenstand minder laten inspringen */
             .team-name {
@@ -200,7 +202,7 @@
         </div>
         
         <div class="content">
-            <div class="chart-container" style="height: 500px;">
+            <div class="chart-container" id="chartContainer">
                 <canvas id="teamScoreChart"></canvas>
             </div>
             
@@ -213,6 +215,18 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Zorgen dat de grafiek goed schaalt op mobiel
+            function adjustChartSize() {
+                const chartContainer = document.getElementById('chartContainer');
+                if (window.innerWidth <= 1000) {
+                    // Forceer een grote hoogte op mobiel
+                    chartContainer.style.height = Math.max(650, window.innerHeight * 0.7) + 'px';
+                }
+            }
+            
+            // Direct uitvoeren en bij resizing
+            adjustChartSize();
+            window.addEventListener('resize', adjustChartSize);
             // Team data with scores and colors
             const teamData = [
                 {
@@ -380,7 +394,7 @@
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false,
+                    maintainAspectRatio: false, // Belangrijk om hoogte volledig te benutten
                     plugins: {
                         legend: {
                             position: 'bottom',
