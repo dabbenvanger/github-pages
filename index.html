@@ -158,6 +158,26 @@
                 width: 100%;
                 min-width: 0;
             }
+            /* Maken dat de grafiek hoger is op mobiele apparaten */
+            .chart-container {
+                height: 500px;
+            }
+        }
+        @media (max-width: 600px) {
+            /* Extra aanpassingen voor zeer kleine schermen */
+            .dashboard {
+                padding: 10px;
+            }
+            .team-name {
+                max-width: 120px;
+            }
+            .team-item {
+                padding: 8px 0;
+            }
+            .team-score {
+                min-width: 30px;
+                text-align: right;
+            }
         }
     </style>
 </head>
@@ -169,7 +189,7 @@
         </div>
         
         <div class="content">
-            <div class="chart-container">
+            <div class="chart-container" style="height: 400px;">
                 <canvas id="teamScoreChart"></canvas>
             </div>
             
