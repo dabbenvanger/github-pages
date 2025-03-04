@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Team Score Progression Chart</title>
+    <title>Team Score Progressie</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
@@ -110,19 +110,20 @@
             border: 2px solid #f59e0b;
         }
         .custom-tooltip {
-            background-color: rgba(255, 255, 255, 0.95);
+            background-color: #1f2937; /* Donkere achtergrond in plaats van wit */
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             padding: 10px 14px;
             border: none;
+            color: white; /* Witte tekst voor betere leesbaarheid */
         }
         .tooltip-title {
             font-weight: bold;
             padding-bottom: 8px;
             margin-bottom: 8px;
-            border-bottom: 1px solid #e5e7eb;
+            border-bottom: 1px solid #4b5563; /* Donkerder scheidingslijntje */
             font-size: 14px;
-            color: #374151;
+            color: white; /* Witte tekst voor titel */
         }
         .tooltip-item {
             display: flex;
@@ -134,7 +135,7 @@
             display: flex;
             align-items: center;
             font-size: 13px;
-            color: #4b5563;
+            color: #e5e7eb; /* Lichtere grijstint voor teamnaam */
         }
         .tooltip-color {
             width: 8px;
@@ -161,8 +162,8 @@
 <body>
     <div class="dashboard">
         <div class="header">
-            <h1>Team Score Progression</h1>
-            <p>Cumulative points across 8 rounds</p>
+            <h1>Team Score Progressie</h1>
+            <p>Cumulatieve punten over 8 rondes</p>
         </div>
         
         <div class="content">
@@ -171,7 +172,7 @@
             </div>
             
             <div class="leaderboard">
-                <h2>Final Standings</h2>
+                <h2>Eindstand</h2>
                 <div id="rankings"></div>
             </div>
         </div>
@@ -188,7 +189,7 @@
                 },
                 {
                     name: "NAC Breda 1912",
-                    color: "#F7FF00",
+                    color: "#F7FF00", // Originele gele kleur behouden
                     scores: [9, 29, 46, 65, 79, 93, 101, 115]
                 },
                 {
@@ -287,7 +288,7 @@
                         let innerHtml = '<div class="tooltip-title">';
                         
                         titleLines.forEach(title => {
-                            innerHtml += 'Round ' + title;
+                            innerHtml += 'Ronde ' + title; // Vertaald naar Nederlands
                         });
                         innerHtml += '</div>';
 
@@ -306,7 +307,7 @@
                                     <div class="tooltip-color" style="background-color: ${item.color}"></div>
                                     ${item.label}
                                 </div>
-                                <div class="tooltip-score" style="color: ${item.color}">${item.value} pts</div>
+                                <div class="tooltip-score" style="color: ${item.color}">${item.value} ptn</div>
                             </div>`;
                         });
                         
@@ -353,7 +354,7 @@
                         x: {
                             title: {
                                 display: true,
-                                text: 'Round',
+                                text: 'Ronde', // Vertaald naar Nederlands
                                 color: '#6b7280',
                                 font: {
                                     size: 14
@@ -370,7 +371,7 @@
                         y: {
                             title: {
                                 display: true,
-                                text: 'Cumulative Points',
+                                text: 'Cumulatieve Punten', // Vertaald naar Nederlands
                                 color: '#6b7280',
                                 font: {
                                     size: 14
