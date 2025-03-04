@@ -110,20 +110,20 @@
             border: 2px solid #f59e0b;
         }
         .custom-tooltip {
-            background-color: #4b5563; /* Lichtere grijstint in plaats van donkergrijs */
+            background-color: #f1f5f9; /* Zeer lichte grijstint voor achtergrond */
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             padding: 10px 14px;
-            border: none;
-            color: white; /* Witte tekst voor betere leesbaarheid */
+            border: 1px solid #e2e8f0;
+            color: #334155; /* Donkere tekst voor lichte achtergrond */
         }
         .tooltip-title {
             font-weight: bold;
             padding-bottom: 8px;
             margin-bottom: 8px;
-            border-bottom: 1px solid #9ca3af; /* Lichtere scheidingslijn */
+            border-bottom: 1px solid #cbd5e1; /* Lichte scheidingslijn */
             font-size: 14px;
-            color: white; /* Witte tekst voor titel */
+            color: #1e293b; /* Donkere tekst voor titel */
         }
         .tooltip-item {
             display: flex;
@@ -135,7 +135,7 @@
             display: flex;
             align-items: center;
             font-size: 13px;
-            color: #f3f4f6; /* Lichtere grijstint voor teamnaam */
+            color: #475569; /* Donkere grijstint voor teamnaam */
         }
         .tooltip-color {
             width: 8px;
@@ -147,6 +147,8 @@
             font-weight: bold;
             margin-left: 12px;
             font-size: 13px;
+            padding: 2px 6px;
+            border-radius: 4px;
         }
         @media (max-width: 1000px) {
             .content {
@@ -302,12 +304,18 @@
                             .sort((a, b) => b.value - a.value);
                         
                         items.forEach(item => {
+                            // Bepaal of dit NAC Breda of Walburg is (gele kleuren)
+                            const isYellowTeam = item.color === "#F7FF00" || item.color === "#FFE249";
+                            
                             innerHtml += `<div class="tooltip-item">
                                 <div class="tooltip-team">
                                     <div class="tooltip-color" style="background-color: ${item.color}"></div>
                                     ${item.label}
                                 </div>
-                                <div class="tooltip-score" style="color: ${item.color}">${item.value} ptn</div>
+                                <div class="tooltip-score" style="
+                                    color: ${isYellowTeam ? 'white' : item.color}; 
+                                    background-color: ${isYellowTeam ? 'black' : 'transparent'};
+                                ">${item.value} ptn</div>
                             </div>`;
                         });
                         
