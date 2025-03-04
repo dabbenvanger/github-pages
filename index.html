@@ -251,12 +251,12 @@
                 backgroundColor: adjustOpacity(team.color, 0.1),
                 tension: 0.1,
                 borderWidth: team.name === "You Will Never Find Brian Here" ? 3 : 2,
-                pointBackgroundColor: team.color, // Volledig ingekleurde markers in teamkleur
+                pointBackgroundColor: '#FFFFFF',
                 pointBorderColor: team.color,
-                pointBorderWidth: 1,
+                pointBorderWidth: 2,
                 pointRadius: 4,
                 pointHoverRadius: 7,
-                pointHoverBackgroundColor: team.color, 
+                pointHoverBackgroundColor: team.color,
                 pointHoverBorderColor: '#FFFFFF'
             }));
             
@@ -349,7 +349,9 @@
                             position: 'bottom',
                             labels: {
                                 usePointStyle: true,
-                                boxWidth: 8,
+                                pointStyle: 'rectRounded',
+                                boxWidth: 40,
+                                boxHeight: 6,
                                 padding: 15,
                                 font: {
                                     size: 12
