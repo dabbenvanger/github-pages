@@ -304,8 +304,8 @@
                             .sort((a, b) => b.value - a.value);
                         
                         items.forEach(item => {
-                            // Bepaal of dit NAC Breda of Walburg is (gele kleuren)
-                            const isYellowTeam = item.color === "#F7FF00" || item.color === "#FFE249";
+                            // Alleen speciale behandeling voor NAC Breda (gele kleur)
+                            const isNACBredaTeam = item.color === "#F7FF00";
                             
                             innerHtml += `<div class="tooltip-item">
                                 <div class="tooltip-team">
@@ -313,8 +313,8 @@
                                     ${item.label}
                                 </div>
                                 <div class="tooltip-score" style="
-                                    color: ${isYellowTeam ? 'white' : item.color}; 
-                                    background-color: ${isYellowTeam ? 'black' : 'transparent'};
+                                    color: ${item.color}; 
+                                    background-color: ${isNACBredaTeam ? 'black' : 'transparent'};
                                 ">${item.value} ptn</div>
                             </div>`;
                         });
